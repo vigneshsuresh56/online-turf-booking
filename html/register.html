@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register – TurfBook</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body class="auth-page">
+
+<div class="auth-split">
+  <div class="auth-brand-panel">
+    <a href="index.html" class="logo large">TURF<span>BOOK</span></a>
+    <p class="auth-tagline">Your game starts here.</p>
+    <div class="auth-bg-text">JOIN</div>
+  </div>
+  <div class="auth-form-panel">
+    <div class="auth-form-wrap">
+      <h2 class="form-heading">Create Account</h2>
+      <p class="form-sub">Join thousands of players on TurfBook</p>
+      <form class="booking-form" onsubmit="handleRegister(event)">
+        <div class="form-group"><label>Full Name</label><input type="text" placeholder="Aravind Kumar" required/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Email</label><input type="email" placeholder="you@email.com" required/></div>
+          <div class="form-group"><label>Phone</label><input type="tel" placeholder="+91 98000 00000" required/></div>
+        </div>
+        <div class="form-group"><label>Password</label><input type="password" placeholder="Min. 8 characters" required/></div>
+        <div class="form-group"><label>Confirm Password</label><input type="password" placeholder="Repeat password" required/></div>
+        <button type="submit" class="btn-primary full-width">Create Account →</button>
+        <p class="auth-switch">Already have an account? <a href="login.html">Login</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

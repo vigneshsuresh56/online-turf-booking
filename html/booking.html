@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book a Slot – TurfBook</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">TURF<span>BOOK</span></a>
+  <nav class="nav">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="turfs.html" class="nav-link">Turfs</a>
+    <a href="booking.html" class="nav-link active">Booking</a>
+    <a href="contact.html" class="nav-link">Contact</a>
+    <a href="login.html" class="nav-cta">Login</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
+</header>
+
+<section class="page-hero short-hero">
+  <div class="hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="section-label" style="color:var(--accent)">Reserve Your Slot</div>
+    <h1 class="page-title">Book a Turf</h1>
+    <p>Fast, easy, confirmed instantly.</p>
+  </div>
+</section>
+
+<section class="booking-section">
+  <div class="booking-layout">
+    <div class="booking-form-wrap">
+      <h2 class="form-heading">Your Details</h2>
+      <form id="bookingForm" class="booking-form" onsubmit="bookTurf(event)">
+
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="name" placeholder="e.g. Aravind Kumar" required/>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="+91 98765 43210"/>
+        </div>
+
+        <div class="form-group">
+          <label>Select Turf</label>
+          <select id="turf">
+            <option value="Green Field Turf (₹800/hr)">Green Field Turf — ₹800/hr</option>
+            <option value="City Arena (₹1000/hr)">City Arena — ₹1000/hr</option>
+            <option value="Elite Turf (₹1200/hr)">Elite Turf — ₹1200/hr</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="date" required/>
+          </div>
+          <div class="form-group">
+            <label>Time Slot</label>
+            <select id="time">
+              <option>6 AM – 7 AM</option>
+              <option>7 AM – 8 AM</option>
+              <option>8 AM – 9 AM</option>
+              <option>5 PM – 6 PM</option>
+              <option>6 PM – 7 PM</option>
+              <option>7 PM – 8 PM</option>
+              <option>8 PM – 9 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Sport</label>
+          <div class="sport-select-row">
+            <label class="sport-option"><input type="radio" name="sport" value="Football" checked/><span>⚽ Football</span></label>
+            <label class="sport-option"><input type="radio" name="sport" value="Cricket"/><span>🏏 Cricket</span></label>
+            <label class="sport-option"><input type="radio" name="sport" value="Box Cricket"/><span>📦 Box Cricket</span></label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary full-width">Confirm Booking →</button>
+      </form>
+    </div>
+
+    <div class="booking-summary" id="bookingSummary" style="display:none">
+      <div class="summary-icon">✅</div>
+      <h3>Booking Confirmed!</h3>
+      <div class="summary-details" id="summaryDetails"></div>
+      <a href="index.html" class="btn-outline" style="margin-top:24px;display:inline-block">Back to Home</a>
+    </div>
+
+    <div class="booking-info">
+      <h3>Booking Info</h3>
+      <ul class="info-list">
+        <li>📅 Bookings open 30 days in advance</li>
+        <li>⏰ Cancel up to 2 hours before your slot</li>
+        <li>💳 Pay at the venue or via UPI</li>
+        <li>📞 Need help? Call <strong>+91 98000 00000</strong></li>
+      </ul>
+      <div class="info-card">
+        <div class="info-card-label">Today's Availability</div>
+        <div class="slots-row">
+          <span class="slot available">6 AM</span>
+          <span class="slot booked">7 AM</span>
+          <span class="slot available">8 AM</span>
+          <span class="slot booked">6 PM</span>
+          <span class="slot available">7 PM</span>
+          <span class="slot available">8 PM</span>
+        </div>
+        <div class="slot-legend"><span class="dot green"></span>Available <span class="dot red"></span>Booked</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">TURF<span>BOOK</span></div>
+    <nav class="footer-nav">
+      <a href="index.html">Home</a>
+      <a href="turfs.html">Turfs</a>
+      <a href="booking.html">Booking</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 TurfBook. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

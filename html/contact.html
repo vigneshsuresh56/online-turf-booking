@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact – TurfBook</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">TURF<span>BOOK</span></a>
+  <nav class="nav">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="turfs.html" class="nav-link">Turfs</a>
+    <a href="booking.html" class="nav-link">Booking</a>
+    <a href="contact.html" class="nav-link active">Contact</a>
+    <a href="login.html" class="nav-cta">Login</a>
+  </nav>
+  <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
+</header>
+
+<section class="page-hero short-hero">
+  <div class="hero-overlay"></div>
+  <div class="page-hero-content">
+    <div class="section-label" style="color:var(--accent)">Get In Touch</div>
+    <h1 class="page-title">Contact Us</h1>
+    <p>We're here to help you play better.</p>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h3>Reach Us</h3>
+      <div class="contact-item"><div class="ci-icon">📞</div><div><strong>Phone</strong><p>+91 98000 00000</p></div></div>
+      <div class="contact-item"><div class="ci-icon">📧</div><div><strong>Email</strong><p>hello@turfbook.in</p></div></div>
+      <div class="contact-item"><div class="ci-icon">📍</div><div><strong>Address</strong><p>Anna Nagar, Chennai, TN 600040</p></div></div>
+      <div class="contact-item"><div class="ci-icon">⏰</div><div><strong>Hours</strong><p>Mon–Sun: 6 AM – 11 PM</p></div></div>
+    </div>
+    <div class="contact-form-wrap">
+      <h2 class="form-heading">Send a Message</h2>
+      <form class="booking-form" onsubmit="sendContact(event)">
+        <div class="form-group"><label>Your Name</label><input type="text" placeholder="Full name" required/></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="you@email.com" required/></div>
+        <div class="form-group"><label>Subject</label><input type="text" placeholder="Booking query, feedback..."/></div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Tell us how we can help..." rows="5"></textarea></div>
+        <button type="submit" class="btn-primary full-width">Send Message →</button>
+        <p id="contactMsg" style="color:var(--accent);margin-top:12px;font-weight:600;text-align:center"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">TURF<span>BOOK</span></div>
+    <nav class="footer-nav">
+      <a href="index.html">Home</a>
+      <a href="turfs.html">Turfs</a>
+      <a href="booking.html">Booking</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 TurfBook. All rights reserved.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

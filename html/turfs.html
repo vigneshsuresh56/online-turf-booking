@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turfs — TurfBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#39e75f;--green2:#2fd154;--dark:#0a0a0a;--card:#141414;--border:#222;--muted:#666;--gold:#FFD700;}
+body{background:var(--dark);font-family:'DM Sans',sans-serif;color:#e0e0e0;min-height:100vh;}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 48px;background:#080808;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--green);letter-spacing:3px;}
+nav{display:flex;gap:2px;align-items:center;}
+nav a{color:#888;padding:8px 14px;text-decoration:none;border-radius:7px;font-size:.875rem;font-weight:500;transition:color .2s;}
+nav a:hover{color:#fff;}
+nav a.active{color:var(--green);}
+.login-btn{background:var(--green)!important;color:#000!important;font-weight:700!important;margin-left:8px;padding:8px 20px!important;border-radius:7px;}
+.page-hero{position:relative;padding:52px 48px 36px;background:linear-gradient(180deg,#0d1a0d,#080808);border-bottom:1px solid #1a2a1a;}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(57,231,95,.13),transparent 70%);pointer-events:none;}
+.page-hero h1{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:#fff;letter-spacing:4px;line-height:1;}
+.page-hero h1 span{color:var(--green);}
+.page-hero p{color:#888;margin-top:8px;font-size:.95rem;}
+.hero-stats{display:flex;gap:32px;margin-top:24px;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--green);}
+.stat-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.filter-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 48px;background:#0d0d0d;border-bottom:1px solid var(--border);position:sticky;top:57px;z-index:150;}
+.search-wrap{flex:1;min-width:200px;position:relative;}
+.search-wrap input{width:100%;padding:10px 14px 10px 40px;background:#1a1a1a;border:1px solid var(--border);border-radius:9px;color:#fff;font-size:.875rem;outline:none;transition:border-color .2s;font-family:'DM Sans',sans-serif;}
+.search-wrap input:focus{border-color:var(--green);}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.4;pointer-events:none;}
+.chips{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{padding:7px 16px;border:1px solid var(--border);border-radius:20px;background:transparent;color:#888;cursor:pointer;font-size:.82rem;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .2s;white-space:nowrap;}
+.chip:hover{border-color:var(--green);color:var(--green);}
+.chip.on{background:var(--green);border-color:var(--green);color:#000;font-weight:700;}
+.sort-sel{padding:9px 13px;background:#1a1a1a;border:1px solid var(--border);border-radius:9px;color:#888;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;outline:none;}
+.sort-sel:focus{border-color:var(--green);}
+.result-ct{color:var(--muted);font-size:.82rem;white-space:nowrap;}
+.result-ct b{color:var(--green);}
+.turfs-wrap{padding:32px 48px 64px;}
+.turf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;}
+.turf-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .28s,border-color .28s,box-shadow .28s;animation:fadeUp .5s both;}
+.turf-card:hover{transform:translateY(-6px);border-color:var(--green);box-shadow:0 16px 48px rgba(57,231,95,.18);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.card-visual{position:relative;height:180px;overflow:hidden;background:#0a0a0a;}
+.card-visual svg{width:100%;height:100%;display:block;transition:transform .4s;}
+.turf-card:hover .card-visual svg{transform:scale(1.05);}
+.sport-tag{position:absolute;top:11px;left:11px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);color:var(--green);font-size:.66rem;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(57,231,95,.3);}
+.avail-dot{position:absolute;top:11px;right:11px;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 9px var(--green);}
+.avail-dot.busy{background:#ff3b3b;box-shadow:0 0 9px #ff3b3b;}
+.card-body{padding:14px 16px 16px;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:1.18rem;color:#fff;letter-spacing:1.5px;margin-bottom:3px;}
+.card-loc{color:var(--muted);font-size:.74rem;margin-bottom:9px;}
+.stars-row{display:flex;align-items:center;gap:5px;margin-bottom:9px;}
+.user-rating-row{display:flex;align-items:center;gap:7px;margin-bottom:12px;padding:7px 9px;background:#1a1a1a;border-radius:8px;}
+.user-label{font-size:.7rem;color:var(--muted);flex-shrink:0;}
+.user-stars{display:flex;gap:2px;}
+.rated-msg{font-size:.7rem;color:var(--green);margin-left:2px;display:none;}
+.card-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.card-price{color:var(--green);font-size:1.08rem;font-weight:700;}
+.card-price small{color:var(--muted);font-size:.68rem;font-weight:400;}
+.card-size{font-size:.7rem;color:#888;background:#1e1e1e;padding:3px 8px;border-radius:5px;border:1px solid #2a2a2a;}
+.book-btn{display:block;width:100%;padding:9px;background:var(--green);color:#000;font-weight:700;font-size:.8rem;text-align:center;text-decoration:none;border-radius:9px;letter-spacing:.8px;transition:background .2s,transform .12s;}
+.book-btn:hover{background:var(--green2);transform:scale(.98);}
+.book-btn.waitlist{background:#2a2a2a;color:#888;border:1px solid #333;}
+@media(max-width:768px){header{padding:12px 20px;}.filter-bar,.turfs-wrap{padding-left:20px;padding-right:20px;}.page-hero{padding:36px 20px 28px;}nav a:not(.login-btn){display:none;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">TurfBook</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="turfs.html" class="active">Turfs</a>
+    <a href="booking.html">Booking</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html" class="login-btn">Login</a>
+  </nav>
+</header>
+<div class="page-hero">
+  <h1>ALL <span>TURFS</span></h1>
+  <p>Book the best sports venues across Chennai — instantly</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">100</div><div class="stat-lbl">Venues</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-lbl">Sports</div></div>
+    <div class="stat"><div class="stat-num">&#8377;500</div><div class="stat-lbl">Starting</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-lbl">Booking</div></div>
+  </div>
+</div>
+<div class="filter-bar">
+  <div class="search-wrap">
+    <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></span>
+    <input type="text" id="searchInput" placeholder="Search turf name or area…" oninput="doFilter()">
+  </div>
+  <div class="chips">
+    <button class="chip on" onclick="setChip('all',this)">All</button>
+    <button class="chip" onclick="setChip('football',this)">⚽ Football</button>
+    <button class="chip" onclick="setChip('cricket',this)">🏏 Cricket</button>
+    <button class="chip" onclick="setChip('box cricket',this)">🟩 Box Cricket</button>
+    <button class="chip" onclick="setChip('multi-sport',this)">🏆 Multi-Sport</button>
+  </div>
+  <select class="sort-sel" onchange="doSort(this.value)">
+    <option value="">Sort: Default</option>
+    <option value="pl">Price: Low to High</option>
+    <option value="ph">Price: High to Low</option>
+    <option value="rt">Top Rated</option>
+  </select>
+  <div class="result-ct">Showing <b id="cnt">100</b> turfs</div>
+</div>
+<div class="turfs-wrap"><div class="turf-grid" id="grid"></div></div>
+<footer style="background:#060606;color:#444;text-align:center;padding:22px;border-top:1px solid #161616;font-size:.82rem;">© 2026 TurfBook — Making sports accessible for everyone</footer>
+
+<script>
+/* ═══════════════ SVG SCENE GENERATORS ═══════════════ */
+const FBG=[['#0b3d1a','#1a6b33'],['#0a2e38','#1a5c6e'],['#1a1a0a','#3d3d0a'],['#1a0a1a','#4a1a4a'],['#0a1a3d','#1a3d6b'],['#1a2a10','#0a4020'],['#2a1a00','#4a3000'],['#001a2a','#003a5a'],['#1a001a','#3a003a'],['#001010','#002a2a']];
+const CKG=[['#1a0a00','#3d2000'],['#001a1a','#003d3d'],['#1a1a00','#3d3d00'],['#0a001a','#20003d'],['#001a0a','#003d20'],['#2a1000','#5a2000'],['#001828','#003050'],['#180018','#380038'],['#001200','#002800'],['#1a0a10','#3a1a20']];
+const BXG=[['#001520','#002d40'],['#150020','#300048'],['#200010','#480030'],['#152000','#2d4800'],['#101520','#20304a'],['#002010','#004028'],['#201000','#402800'],['#100020','#280048'],['#002010','#003820'],['#201520','#403040']];
+const MSG=[['#100020','#240048'],['#001020','#002448'],['#001800','#003800'],['#200000','#480000'],['#101800','#203000'],['#002020','#004040'],['#201800','#403000'],['#000020','#000048'],['#200020','#400040'],['#001020','#003040']];
+
+function svgF(s){const[b1,b2]=FBG[s%10];return`<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fsk${s}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${b1}"/><stop offset="100%" stop-color="${b2}"/></linearGradient><linearGradient id="fgr${s}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4a20"/><stop offset="100%" stop-color="#0d2e13"/></linearGradient><radialGradient id="fsp${s}" cx="50%" cy="0%" r="70%"><stop offset="0%" stop-color="rgba(255,255,255,0.07)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><rect width="400" height="180" fill="url(#fsk${s})"/><rect width="400" height="180" fill="url(#fsp${s})"/>${Array.from({length:20},(_,i)=>`<circle cx="${(i*79+17+s*13)%400}" cy="${(i*23+5+s*7)%70}" r="${i%3==0?1.5:.7}" fill="white" opacity="${.2+.4*(i%3)/3}"/>`).join('')}<line x1="40" y1="8" x2="40" y2="100" stroke="#888" stroke-width="2.5"/><rect x="28" y="5" width="24" height="7" rx="2" fill="#aaa"/><line x1="360" y1="8" x2="360" y2="100" stroke="#888" stroke-width="2.5"/><rect x="348" y="5" width="24" height="7" rx="2" fill="#aaa"/><polygon points="28,12 82,105 0,105" fill="rgba(255,255,210,0.04)"/><polygon points="372,12 418,105 318,105" fill="rgba(255,255,210,0.04)"/><rect x="0" y="100" width="400" height="80" fill="url(#fgr${s})"/>${Array.from({length:8},(_,i)=>`<rect x="${i*50}" y="100" width="25" height="80" fill="rgba(255,255,255,0.025)"/>`).join('')}<rect x="55" y="103" width="290" height="72" rx="2" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="1.5"/><line x1="200" y1="103" x2="200" y2="175" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/><circle cx="200" cy="140" r="23" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/><circle cx="200" cy="140" r="2.5" fill="rgba(255,255,255,.5)"/><rect x="55" y="115" width="68" height="48" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/><rect x="277" y="115" width="68" height="48" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/><rect x="55" y="124" width="3" height="30" fill="#ccc"/><rect x="55" y="124" width="22" height="3.5" fill="#ccc"/><rect x="76" y="124" width="3" height="30" fill="#ccc"/><rect x="342" y="124" width="3" height="30" fill="#ccc"/><rect x="320" y="124" width="22" height="3.5" fill="#ccc"/><rect x="320" y="124" width="3" height="30" fill="#ccc"/><circle cx="${180+s*7%40}" cy="140" r="9" fill="white" stroke="#bbb" stroke-width=".5"/><polygon points="${180+s*7%40},132 ${184+s*7%40},137 ${182+s*7%40},143 ${178+s*7%40},143 ${176+s*7%40},137" fill="#222" opacity=".7"/><ellipse cx="${140+s%20}" cy="163" rx="7" ry="14" fill="rgba(57,231,95,.75)"/><circle cx="${140+s%20}" cy="147" r="5" fill="rgba(57,231,95,.75)"/><ellipse cx="${260-s%20}" cy="158" rx="7" ry="14" fill="rgba(255,80,80,.75)"/><circle cx="${260-s%20}" cy="142" r="5" fill="rgba(255,80,80,.75)"/><ellipse cx="${110+s%15}" cy="170" rx="6" ry="12" fill="rgba(57,231,95,.5)"/><circle cx="${110+s%15}" cy="156" r="4.5" fill="rgba(57,231,95,.5)"/><ellipse cx="${290-s%15}" cy="168" rx="6" ry="12" fill="rgba(255,80,80,.5)"/><circle cx="${290-s%15}" cy="154" r="4.5" fill="rgba(255,80,80,.5)"/></svg>`;}
+
+function svgC(s){const[b1,b2]=CKG[s%10];return`<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="cov${s}" cx="50%" cy="60%" r="65%"><stop offset="0%" stop-color="#2a6a1a"/><stop offset="60%" stop-color="#1a4a10"/><stop offset="100%" stop-color="#0d2a08"/></radialGradient><linearGradient id="csk${s}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${b1}"/><stop offset="100%" stop-color="${b2}"/></linearGradient><radialGradient id="csu${s}" cx="${70+s*3}%" cy="18%" r="18%"><stop offset="0%" stop-color="rgba(255,200,60,.5)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><rect width="400" height="180" fill="url(#csk${s})"/><rect width="400" height="180" fill="url(#csu${s})"/><ellipse cx="${70+s*5}" cy="28" rx="42" ry="15" fill="rgba(255,255,255,.05)"/><ellipse cx="${110+s*3}" cy="22" rx="32" ry="13" fill="rgba(255,255,255,.05)"/><ellipse cx="${280+s*2}" cy="36" rx="37" ry="13" fill="rgba(255,255,255,.04)"/><ellipse cx="200" cy="135" rx="188" ry="62" fill="url(#cov${s})"/>${Array.from({length:5},(_,i)=>`<ellipse cx="200" cy="135" rx="${188-i*32}" ry="${62-i*10}" fill="none" stroke="rgba(255,255,255,.03)" stroke-width="7"/>`).join('')}<ellipse cx="200" cy="135" rx="185" ry="59" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1.5" stroke-dasharray="6 4"/><rect x="176" y="103" width="48" height="64" rx="2" fill="#b8960c" opacity=".8"/><rect x="178" y="103" width="44" height="64" rx="1" fill="#c4a020" opacity=".45"/><line x1="168" y1="116" x2="232" y2="116" stroke="white" stroke-width="1.5" opacity=".65"/><line x1="168" y1="155" x2="232" y2="155" stroke="white" stroke-width="1.5" opacity=".65"/><rect x="192" y="102" width="2.5" height="14" fill="#e0d0a0" rx="1"/><rect x="197" y="102" width="2.5" height="14" fill="#e0d0a0" rx="1"/><rect x="202" y="102" width="2.5" height="14" fill="#e0d0a0" rx="1"/><line x1="191" y1="102" x2="206" y2="102" stroke="#d0b060" stroke-width="2" opacity=".9"/><rect x="192" y="158" width="2.5" height="14" fill="#e0d0a0" rx="1"/><rect x="197" y="158" width="2.5" height="14" fill="#e0d0a0" rx="1"/><rect x="202" y="158" width="2.5" height="14" fill="#e0d0a0" rx="1"/><line x1="191" y1="158" x2="206" y2="158" stroke="#d0b060" stroke-width="2" opacity=".9"/><ellipse cx="200" cy="148" rx="6" ry="12" fill="rgba(57,231,95,.8)"/><circle cx="200" cy="134" r="5" fill="rgba(57,231,95,.8)"/><rect x="203" y="141" width="3" height="17" rx="1.5" fill="#c8a060" transform="rotate(-22 205 149)"/><circle cx="${230+s%20}" cy="${110+s%10}" r="7.5" fill="#cc1a1a"/><path d="M${223+s%20},${110+s%10} Q${230+s%20},${105+s%10} ${237+s%20},${110+s%10}" fill="none" stroke="white" stroke-width=".9" opacity=".6"/><path d="M${223+s%20},${110+s%10} Q${230+s%20},${115+s%10} ${237+s%20},${110+s%10}" fill="none" stroke="white" stroke-width=".9" opacity=".6"/><ellipse cx="${130+s%20}" cy="145" rx="5" ry="10" fill="rgba(255,200,60,.55)"/><circle cx="${130+s%20}" cy="133" r="4" fill="rgba(255,200,60,.55)"/><ellipse cx="${270-s%20}" cy="145" rx="5" ry="10" fill="rgba(255,200,60,.55)"/><circle cx="${270-s%20}" cy="133" r="4" fill="rgba(255,200,60,.55)"/></svg>`;}
+
+function svgB(s){const[b1,b2]=BXG[s%10];return`<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bsk${s}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${b1}"/><stop offset="100%" stop-color="${b2}"/></linearGradient><linearGradient id="bfl${s}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f3320"/><stop offset="100%" stop-color="#0a2015"/></linearGradient></defs><rect width="400" height="180" fill="url(#bsk${s})"/><rect x="0" y="97" width="400" height="83" fill="url(#bfl${s})"/><rect x="28" y="16" width="344" height="81" fill="rgba(160,210,160,.05)" stroke="rgba(160,220,160,.18)" stroke-width="1"/>${Array.from({length:13},(_,i)=>`<line x1="${28+i*26}" y1="16" x2="${28+i*26}" y2="97" stroke="rgba(140,210,140,.1)" stroke-width=".7"/>`).join('')}${Array.from({length:7},(_,i)=>`<line x1="28" y1="${16+i*12}" x2="372" y2="${16+i*12}" stroke="rgba(140,210,140,.1)" stroke-width=".7"/>`).join('')}<polygon points="28,16 28,180 8,180 8,8" fill="rgba(140,210,140,.04)" stroke="rgba(140,210,140,.13)" stroke-width="1"/><polygon points="372,16 372,180 392,180 392,8" fill="rgba(140,210,140,.04)" stroke="rgba(140,210,140,.13)" stroke-width="1"/><line x1="8" y1="8" x2="392" y2="8" stroke="rgba(200,200,200,.28)" stroke-width="2.5"/><line x1="8" y1="8" x2="28" y2="16" stroke="rgba(200,200,200,.22)" stroke-width="2"/><line x1="392" y1="8" x2="372" y2="16" stroke="rgba(200,200,200,.22)" stroke-width="2"/><rect x="152" y="101" width="96" height="70" rx="1" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/><line x1="152" y1="114" x2="248" y2="114" stroke="rgba(255,255,255,.18)" stroke-width="1"/><line x1="152" y1="154" x2="248" y2="154" stroke="rgba(255,255,255,.18)" stroke-width="1"/><rect x="176" y="101" width="48" height="70" fill="rgba(200,160,20,.14)"/><rect x="184" y="98" width="2.5" height="13" fill="#ddd" rx="1"/><rect x="189" y="98" width="2.5" height="13" fill="#ddd" rx="1"/><rect x="194" y="98" width="2.5" height="13" fill="#ddd" rx="1"/><line x1="183" y1="98" x2="198" y2="98" stroke="#c8a020" stroke-width="2"/><rect x="184" y="158" width="2.5" height="13" fill="#ddd" rx="1"/><rect x="189" y="158" width="2.5" height="13" fill="#ddd" rx="1"/><rect x="194" y="158" width="2.5" height="13" fill="#ddd" rx="1"/><line x1="183" y1="158" x2="198" y2="158" stroke="#c8a020" stroke-width="2"/><ellipse cx="200" cy="146" rx="6" ry="12" fill="rgba(57,231,95,.82)"/><circle cx="200" cy="132" r="5.5" fill="rgba(57,231,95,.82)"/><rect x="203" y="140" width="3.5" height="17" rx="1.5" fill="#c09030" transform="rotate(-25 205 148)"/><circle cx="${245+s%15}" cy="${107+s%8}" r="7" fill="#cc1a1a"/><path d="M${238+s%15},${107+s%8} Q${245+s%15},${102+s%8} ${252+s%15},${107+s%8}" fill="none" stroke="white" stroke-width=".9" opacity=".6"/><path d="M${238+s%15},${107+s%8} Q${245+s%15},${112+s%8} ${252+s%15},${107+s%8}" fill="none" stroke="white" stroke-width=".9" opacity=".6"/><rect x="24" y="9" width="22" height="5" rx="2" fill="#ffee88" opacity=".85"/><rect x="354" y="9" width="22" height="5" rx="2" fill="#ffee88" opacity=".85"/><polygon points="24,14 56,97 8,97" fill="rgba(255,238,100,.035)"/><polygon points="376,14 408,97 352,97" fill="rgba(255,238,100,.035)"/>${Array.from({length:9},(_,i)=>`<ellipse cx="${30+i*40}" cy="177" rx="13" ry="6" fill="rgba(255,255,255,.05)"/>`).join('')}</svg>`;}
+
+function svgM(s){const[b1,b2]=MSG[s%10];return`<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="msk${s}" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="${b1}"/><stop offset="100%" stop-color="${b2}"/></linearGradient><linearGradient id="mgr${s}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a3a2a"/><stop offset="100%" stop-color="#0d2018"/></linearGradient><radialGradient id="mgl${s}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="rgba(57,231,95,.1)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><rect width="400" height="180" fill="url(#msk${s})"/><rect width="400" height="180" fill="url(#mgl${s})"/>${Array.from({length:24},(_,i)=>`<circle cx="${(i*61+23+s*7)%400}" cy="${(i*19+7+s*3)%80}" r="${i%4==0?1.5:.7}" fill="white" opacity="${.15+.45*(i%4)/4}"/>`).join('')}<ellipse cx="200" cy="86" rx="196" ry="54" fill="rgba(28,28,28,.75)" stroke="rgba(57,231,95,.1)" stroke-width="1"/>${Array.from({length:5},(_,i)=>`<ellipse cx="200" cy="86" rx="${196-i*16}" ry="${54-i*7}" fill="none" stroke="rgba(57,231,95,.06)" stroke-width="${5-i}"/>`).join('')}${Array.from({length:44},(_,i)=>`<circle cx="${18+i*8}" cy="${52+(i%3)*12}" r="2.5" fill="rgba(57,231,95,${.08+.08*(i%4)/4})"/>`).join('')}<ellipse cx="200" cy="146" rx="166" ry="46" fill="url(#mgr${s})"/><ellipse cx="200" cy="146" rx="162" ry="42" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.2"/><line x1="38" y1="146" x2="362" y2="146" stroke="rgba(255,255,255,.18)" stroke-width="1"/><circle cx="200" cy="146" r="28" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1"/><rect x="178" y="126" width="44" height="40" rx="1" fill="rgba(200,160,20,.18)" stroke="rgba(255,255,255,.18)" stroke-width=".8"/><path d="M${58+s%5},130 Q${90+s%5},146 ${58+s%5},162" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1"/><path d="M${342-s%5},130 Q${310-s%5},146 ${342-s%5},162" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1"/><path d="M196,138 L200,130 L204,138 L208,133 L200,146 L192,133 Z" fill="rgba(255,215,0,.75)" stroke="rgba(255,215,0,.3)" stroke-width=".5"/><ellipse cx="${145+s%15}" cy="156" rx="6" ry="12" fill="rgba(57,231,95,.72)"/><circle cx="${145+s%15}" cy="142" r="5" fill="rgba(57,231,95,.72)"/><ellipse cx="${255-s%15}" cy="156" rx="6" ry="12" fill="rgba(255,80,80,.72)"/><circle cx="${255-s%15}" cy="142" r="5" fill="rgba(255,80,80,.72)"/><ellipse cx="200" cy="163" rx="5" ry="10" fill="rgba(100,150,255,.65)"/><circle cx="200" cy="151" r="4.5" fill="rgba(100,150,255,.65)"/><line x1="48" y1="8" x2="64" y2="92" stroke="#777" stroke-width="3"/><rect x="33" y="4" width="30" height="9" rx="3" fill="#aaa"/><line x1="352" y1="8" x2="336" y2="92" stroke="#777" stroke-width="3"/><rect x="337" y="4" width="30" height="9" rx="3" fill="#aaa"/><polygon points="33,13 94,92 2,92" fill="rgba(255,248,170,.035)"/><polygon points="367,13 298,92 398,92" fill="rgba(255,248,170,.035)"/><rect x="146" y="6" width="108" height="28" rx="4" fill="#111" stroke="#39e75f" stroke-width="1.2"/><text x="200" y="17" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#39e75f">MULTI SPORT</text><text x="200" y="27" text-anchor="middle" font-family="monospace" font-size="6.5" fill="rgba(57,231,95,.6)">LIVE  ●  ●  ●</text></svg>`;}
+
+function makeSVG(sport,id){const s=id%10;if(sport==='football')return svgF(s);if(sport==='cricket')return svgC(s);if(sport==='box cricket')return svgB(s);return svgM(s);}
+
+/* ═══════════════ 100 TURFS DATA ═══════════════ */
+const areas=['Anna Nagar','T Nagar','Velachery','Porur','Adyar','Guindy','Tambaram','Chromepet','Nungambakkam','Sholinganallur','OMR','ECR','Perambur','Kodambakkam','Royapettah','Pallavaram','Ambattur','Avadi','Poonamallee','Nanganallur','Thiruvanmiyur','Palavakkam','Virugambakkam','West Mambalam','Medavakkam','Madipakkam','Perungudi','Karapakkam','Kottivakkam','Thoraipakkam','Mylapore','Alwarpet','Egmore','Kilpauk','Chetpet','Saidapet','Alandur','Meenambakkam','Pammal','Selaiyur','Korattur','Padi','Kolathur','Villivakkam','Tondiarpet','Periyamet','Vepery','Choolaimedu','Arumbakkam','Koyambedu'];
+const sports=['football','cricket','box cricket','multi-sport'];
+const sportEmoji={'football':'⚽','cricket':'🏏','box cricket':'🟩','multi-sport':'🏆'};
+const sizes={'football':['5v5','7v7','11v11'],'cricket':['Half Pitch','Full Pitch'],'box cricket':['Box','Mini Box'],'multi-sport':['Full','Large']};
+const names=['Green Field','City','Elite','Thunder','Champions','Pro','Night Riders','Smash','Premier','Galaxy','Strike Zone','Powerplay','United Sports','Ace','Red Pitch','Box Blast','Victory','Spin Masters','Turf Kingdom','Flash','Century','Box Masters','Goal Rush','Legends','Sunrise','Grand Slam','Blitz','StrikeForce','Allrounder','Moonlight','Phoenix','Royal','Golden','Silver Star','Diamond','Platinum','Neon','Turbo','Rapid','Swift','Power Play','Super','Mega','Ultra','Alpha','Omega','Nova','Zenith','Peak','Summit','Arena','Ground','Zone','Hub','Club','Sports Park','Field','Pitch','Court','Center'];
+const suffixes={'football':['Turf','Ground','Arena','FC','Field','Zone'],'cricket':['Cricket Ground','Cricket Club','Pitch','Cricket Academy','Cricket Hub'],'box cricket':['Box','Box Arena','Box Club','Smash Zone','Power Box'],'multi-sport':['Sports Hub','Arena','Sports Center','Sports Club','Multi Arena']};
+
+function rnd(min,max){return Math.floor(Math.random()*((max-min)+1))+min;}
+function rndF(min,max,dec){return parseFloat((Math.random()*(max-min)+min).toFixed(dec));}
+
+// Seeded pseudo-random for consistent data
+function seeded(seed,max){return((seed*1103515245+12345)&0x7fffffff)%max;}
+
+const TURFS=Array.from({length:100},(_,i)=>{
+  const id=i+1;
+  const sport=sports[seeded(id*7,4)];
+  const area=areas[seeded(id*13,50)];
+  const nameBase=names[seeded(id*17,names.length)];
+  const suffix=suffixes[sport][seeded(id*23,suffixes[sport].length)];
+  const basePrice={'football':500,'cricket':700,'box cricket':600,'multi-sport':900}[sport];
+  const price=basePrice+seeded(id*31,16)*100;
+  const rating=parseFloat((3.5+seeded(id*41,16)*0.1).toFixed(1));
+  const cnt=50+seeded(id*53,400);
+  const avail=seeded(id*67,10)>2;
+  const sizeArr=sizes[sport];
+  const size=sizeArr[seeded(id*79,sizeArr.length)];
+  return{id,name:`${nameBase} ${suffix}`,loc:area,sport,price,size,rating:Math.min(rating,5.0),cnt,avail};
+});
+
+/* ═══════════════ STAR WIDGETS ═══════════════ */
+function renderStars(rating){
+  let h='';
+  for(let i=1;i<=5;i++){
+    const full=rating>=i,half=!full&&rating>=i-.5;
+    const fill=full?'#FFD700':half?'url(#hg)':'#2a2a2a';
+    const stk=full||half?'#FFD700':'#3a3a3a';
+    h+=`<svg width="13" height="13" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${fill}" stroke="${stk}" stroke-width="1"/></svg>`;
+  }
+  return h;
+}
+function uStarsHTML(id){
+  let h='';
+  for(let i=1;i<=5;i++){
+    h+=`<svg width="16" height="16" viewBox="0 0 24 24" style="cursor:pointer;transition:transform .12s;" onmouseover="hU(${id},${i})" onmouseout="uhU(${id})" onclick="pU(${id},${i})"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#2a2a2a" stroke="#3a3a3a" stroke-width="1"/></svg>`;
+  }
+  return h;
+}
+function setUStars(id,n,picked){
+  const row=document.querySelector(`.us[data-id="${id}"]`);
+  if(!row)return;
+  [...row.querySelectorAll('svg')].forEach((s,i)=>{
+    const p=s.querySelector('polygon');
+    const lit=i<n;
+    p.setAttribute('fill',lit?'#FFD700':'#2a2a2a');
+    p.setAttribute('stroke',lit?'#FFD700':'#3a3a3a');
+    s.style.transform=lit?'scale(1.2)':'scale(1)';
+  });
+}
+function hU(id,n){setUStars(id,n,false);}
+function uhU(id){const row=document.querySelector(`.us[data-id="${id}"]`);if(!row)return;setUStars(id,parseInt(row.dataset.p||0),true);}
+function pU(id,n){
+  const row=document.querySelector(`.us[data-id="${id}"]`);
+  if(!row)return;
+  row.dataset.p=n;
+  setUStars(id,n,true);
+  const msg=row.parentElement.querySelector('.rm');
+  if(msg){msg.style.display='inline';msg.textContent=n===5?'🎉 Amazing!':n>=4?'👍 Great!':n>=3?'😊 Good':n>=2?'😐 Fair':'😞 Poor';}
+}
+
+/* ═══════════════ CARD ═══════════════ */
+function cardHTML(t,idx){
+  return `<div class="turf-card" data-sport="${t.sport}" data-price="${t.price}" data-rating="${t.rating}" style="animation-delay:${(idx%15)*.04}s">
+    <div class="card-visual">${makeSVG(t.sport,t.id)}<div class="sport-tag">${t.sport.toUpperCase()}</div><div class="avail-dot ${t.avail?'':'busy'}" title="${t.avail?'Slots available':'Fully booked'}"></div></div>
+    <div class="card-body">
+      <div class="card-title">${t.name}</div>
+      <div class="card-loc">&#128205; ${t.loc}, Chennai</div>
+      <div class="stars-row">${renderStars(t.rating)}<span style="font-size:.8rem;font-weight:700;color:#FFD700;margin-left:4px;">${t.rating}</span><span style="font-size:.72rem;color:var(--muted);margin-left:3px;">(${t.cnt})</span></div>
+      <div class="user-rating-row">
+        <span class="user-label">Rate:</span>
+        <div class="us user-stars" data-id="${t.id}" data-p="0">${uStarsHTML(t.id)}</div>
+        <span class="rm rated-msg"></span>
+      </div>
+      <div class="card-meta">
+        <div class="card-price">&#8377;${t.price.toLocaleString()} <small>/ Hour</small></div>
+        <div class="card-size">${t.size}</div>
+      </div>
+      <a href="booking.html?turf=${encodeURIComponent(t.name)}" class="book-btn ${t.avail?'':'waitlist'}">${t.avail?'&#9889; BOOK NOW':'&#128203; JOIN WAITLIST'}</a>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════ FILTER / SORT / RENDER ═══════════════ */
+let fSport='all',fSort='',fSearch='';
+function render(){
+  let list=[...TURFS];
+  if(fSport!=='all')list=list.filter(t=>t.sport===fSport);
+  if(fSearch){const q=fSearch.toLowerCase();list=list.filter(t=>t.name.toLowerCase().includes(q)||t.loc.toLowerCase().includes(q));}
+  if(fSort==='pl')list.sort((a,b)=>a.price-b.price);
+  else if(fSort==='ph')list.sort((a,b)=>b.price-a.price);
+  else if(fSort==='rt')list.sort((a,b)=>b.rating-a.rating);
+  document.getElementById('cnt').textContent=list.length;
+  const g=document.getElementById('grid');
+  if(!list.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:#444"><div style="font-size:3rem;margin-bottom:14px">&#128269;</div><h3 style="color:#555;margin-bottom:8px">No turfs found</h3><p style="font-size:.9rem">Try adjusting your search or filters</p></div>`;return;}
+  g.innerHTML=list.map((t,i)=>cardHTML(t,i)).join('');
+}
+function setChip(val,el){fSport=val;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');render();}
+function doFilter(){fSearch=document.getElementById('searchInput').value;render();}
+function doSort(v){fSort=v;render();}
+
+// Half-star gradient def (injected into page)
+document.body.insertAdjacentHTML('afterbegin','<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="hg" x1="0" x2="1" y1="0" y2="0"><stop offset="50%" stop-color="#FFD700"/><stop offset="50%" stop-color="#2a2a2a"/></linearGradient></defs></svg>');
+
+render();
+</script>
+</body>
+</html>
